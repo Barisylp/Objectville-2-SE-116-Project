@@ -17,5 +17,5 @@ public abstract class Cell {
 
     public char getType() {return type;}
 
-
+    public boolean isConnectable() {return this instanceof IConnectable;}
 }
