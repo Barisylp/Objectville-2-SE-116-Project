@@ -89,6 +89,12 @@ public class ObjectVilleGame {
             }
         }
     }
+    private String getUtilityName(char type) {
+        if (type == 'P') return "electricity";
+        if (type == 'W') return "water";
+        if (type == 'T') return "internet";
+        return "unknown";
+    }
     private String getServiceName(char type) {
         if (type == 'F') return "security";
         if (type == 'D') return "health";
@@ -119,6 +125,23 @@ public class ObjectVilleGame {
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+    public void distributeUtilities() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (grid[i][j] instanceof UtilityProvider) {
+                    UtilityProvider p = (UtilityProvider) grid[i][j];
+                    int remaining = p.getCapacity();
+                    String utilityName = getUtilityName(p.getType());
+                    Queue<Cell> queue = new LinkedList<>();
+                    Set<Cell> visited = new HashSet<>();
+                    queue.add(p);
+                    visited.add(p);
+
+
                 }
             }
         }
