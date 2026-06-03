@@ -43,5 +43,50 @@ public class ObjectVilleGame {
             cols = firstLine.length();
         }
         grid = new Cell[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            String line = lines.get(i);
+            String[] cells;
+            if (line.contains(" ")) {
+                cells = line.split(" ");
+            } else {
+                cells = new String[line.length()];
+                for (int k = 0; k < line.length(); k++) {
+                    cells[k] = String.valueOf(line.charAt(k));
+                }
+            }
+
+            for (int j = 0; j < cols; j++) {
+                if (j >= cells.length) {
+                    grid[i][j] = new Empty(i, j);
+                    continue;
+                }
+                char t = cells[j].charAt(0);
+                switch (t) {
+                    case 'H':
+                    case 'I':
+                    case 'C':
+                        grid[i][j] = new Zone(i, j, t);
+                        break;
+                    case 'P':
+                    case 'W':
+                    case 'T':
+                        grid[i][j] = new UtilityProvider(i, j, t);
+                        break;
+                    case 'F':
+                    case 'D':
+                    case 'S':
+                        grid[i][j] = new ServiceProvider(i, j, t);
+                        break;
+                    case 'R':
+                        grid[i][j] = new Road(i, j);
+                        break;
+                    case 'E':
+                        grid[i][j] = new Empty(i, j);
+                        break;
+                    default:
+                        throw new MapException("Unknown cell type:" + t);
+                }
+            }
+        }
     }
-} //saygılarımla
+}
