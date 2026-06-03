@@ -89,4 +89,38 @@ public class ObjectVilleGame {
             }
         }
     }
+    private String getServiceName(char type) {
+        if (type == 'F') return "security";
+        if (type == 'D') return "health";
+        if (type == 'S') return "education";
+        return "unknown";
+    }
+
+    public void provideServices() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (grid[i][j] instanceof ServiceProvider) {
+                    ServiceProvider sp = (ServiceProvider) grid[i][j];
+                    int r = sp.getRange();
+                    String serviceName = getServiceName(sp.getType());
+                    for (int si = 0; si < rows; si++) {
+                        for (int sj = 0; sj < cols; sj++) {
+                            if (grid[si][sj] instanceof Zone) {
+                                Zone z = (Zone) grid[si][sj];
+                                if (Math.abs(sp.x - si) + Math.abs(sp.y - sj) <= r) {
+                                    if (sp.getType() == 'S' || sp.getType() == 'D') {
+                                        if (z.getType() != 'H') continue;
+                                    }
+                                    if (sp.getType() == 'F') z.hasSecurity = true;
+                                    if (sp.getType() == 'D') z.hasHealth = true;
+                                    if (sp.getType() == 'S') z.hasEducation = true;
+                                    System.out.println(z.getTypeName() + " at (" + si + "," + sj + ") received " + serviceName + " service");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
