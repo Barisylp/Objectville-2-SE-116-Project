@@ -146,4 +146,53 @@ public class ObjectVilleGame {
             }
         }
     }
+    public void distributeResources() {
+        List<Zone> houses = new ArrayList<>(), industrials = new ArrayList<>(), commercials = new ArrayList<>();
+        for (Cell[] row : grid) {
+            for (Cell c : row) {
+                if (c instanceof Zone) {
+                    if (c.getType() == 'H') houses.add((Zone) c);
+                    else if (c.getType() == 'I') industrials.add((Zone) c);
+                    else if (c.getType() == 'C') commercials.add((Zone) c);
+                }
+            }
+        }
+
+        int popPerZone = 0, goodsPerZone = 0, lifestylePerZone = 0;
+
+        if (!industrials.isEmpty() || !commercials.isEmpty()) {
+            int totalConsumers = industrials.size() + commercials.size();
+            popPerZone = pooledPopulation / totalConsumers;
+            for (Zone z : industrials) z.receivedPopulation = popPerZone;
+            for (Zone z : commercials) z.receivedPopulation = popPerZone;
+        }
+
+        if (!commercials.isEmpty()) {
+            goodsPerZone = pooledGoods / commercials.size();
+            for (Zone z : commercials) z.receivedGoods = goodsPerZone;
+        }
+
+        if (!houses.isEmpty()) {
+            lifestylePerZone = pooledLifestyle / houses.size();
+            for (Zone z : houses) z.receivedLifestyle = lifestylePerZone;
+        }
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (grid[i][j] instanceof Zone) {
+                    Zone z = (Zone) grid[i][j];
+                    if (z.getType() == 'I' && z.receivedPopulation > 0) {
+                        System.out.println(z.getTypeName() + " at (" + i + "," + j + ") received " + z.receivedPopulation + " population");
+                    } else if (z.getType() == 'C') {
+                        if (z.receivedPopulation > 0)
+                            System.out.println(z.getTypeName() + " at (" + i + "," + j + ") received " + z.receivedPopulation + " population");
+                        if (z.receivedGoods > 0)
+                            System.out.println(z.getTypeName() + " at (" + i + "," + j + ") received " + z.receivedGoods + " goods");
+                    } else if (z.getType() == 'H' && z.receivedLifestyle > 0) {
+                        System.out.println(z.getTypeName() + " at (" + i + "," + j + ") received " + z.receivedLifestyle + " lifestyle");
+                    }
+                }
+            }
+        }
+    }
 }
