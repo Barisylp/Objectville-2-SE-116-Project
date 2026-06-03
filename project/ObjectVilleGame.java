@@ -44,4 +44,4 @@ public class ObjectVilleGame {
         }
         grid = new Cell[rows][cols];
     }
-}
+} //saygılarımla
