@@ -129,7 +129,7 @@ public class ObjectVilleGame {
             }
         }
     }
-    public void distributeUtilities() {
+    private void distributeUtilities() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 if (grid[i][j] instanceof UtilityProvider) {
@@ -141,7 +141,51 @@ public class ObjectVilleGame {
                     queue.add(p);
                     visited.add(p);
 
+                    while (!queue.isEmpty() && remaining > 0) {
+                        Cell current = queue.poll();
+                        int[] dx = {-1, 1, 0, 0};
+                        int[] dy = {0, 0, -1, 1};
 
+                        for (int d = 0; d < 4; d++) {
+                            int nx = current.x + dx[d], ny = current.y + dy[d];
+                            if (nx >= 0 && nx < rows && ny >= 0 && ny < cols) {
+                                Cell neighbor = grid[nx][ny];
+                                if (!visited.contains(neighbor) && neighbor.isConnectable()) {
+                                    if (neighbor instanceof Zone) {
+                                        Zone z = (Zone) neighbor;
+                                        int taken = 0;
+                                        if (p.getType() == 'P') {
+                                            int needed = z.demand - z.electricity;
+                                            if (needed > 0) {
+                                                taken = Math.min(needed, remaining);
+                                                z.electricity += taken;
+                                                remaining -= taken;
+                                            }
+                                        } else if (p.getType() == 'W') {
+                                            int needed = z.demand - z.water;
+                                            if (needed > 0) {
+                                                taken = Math.min(needed, remaining);
+                                                z.water += taken;
+                                                remaining -= taken;
+                                            }
+                                        } else if (p.getType() == 'T') {
+                                            int needed = z.demand - z.internet;
+                                            if (needed > 0) {
+                                                taken = Math.min(needed, remaining);
+                                                z.internet += taken;
+                                                remaining -= taken;
+                                            }
+                                        }
+                                        if (taken > 0) {
+                                            System.out.println(z.getTypeName() + " at (" + nx + "," + ny + ") received " + taken + " " + utilityName);
+                                        }
+                                    }
+                                    visited.add(neighbor);
+                                    queue.add(neighbor);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
