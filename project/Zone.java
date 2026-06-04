@@ -30,6 +30,39 @@ public class Zone extends Cell implements IConnectable {
     public void updateDemand() {
         this.demand = Math.max(1, currentOutput);
     }
-    @Override
-    public boolean isConnectable() { return true; }
+    private boolean satisfiesH1(int m) {
+        return m > 0;
+    }
+
+    private boolean satisfiesH2(int m) {
+        return satisfiesH1(m) && hasSecurity && hasHealth && hasEducation;
+    }
+
+    private boolean satisfiesH3(int m) {
+        return satisfiesH2(m) && receivedLifestyle > 0;
+    }
+
+    private boolean satisfiesI1(int m) {
+        return m > 0;
+    }
+
+    private boolean satisfiesI2(int m) {
+        return satisfiesI1(m) && hasSecurity;
+    }
+
+    private boolean satisfiesI3(int m) {
+        return satisfiesI2(m) && receivedPopulation > demand;
+    }
+
+    private boolean satisfiesC1(int m) {
+        return m > 0;
+    }
+
+    private boolean satisfiesC2(int m) {
+        return satisfiesC1(m) && hasSecurity;
+    }
+
+    private boolean satisfiesC3(int m) {
+        return satisfiesC2(m) && receivedPopulation > demand && receivedGoods > demand;
+    }
 }
