@@ -65,4 +65,56 @@ public class Zone extends Cell implements IConnectable {
     private boolean satisfiesC3(int m) {
         return satisfiesC2(m) && receivedPopulation > demand && receivedGoods > demand;
     }
+    public void computeNewState() {
+        if (type == 'H' && (electricity == 0 || water == 0 || internet == 0)) {
+            level = 0;
+            currentOutput = 0;
+            return;
+        }
+        if (type == 'I' && (electricity == 0 || water == 0)) {
+            level = 0;
+            currentOutput = 0;
+            return;
+        }
+        if (type == 'C' && (electricity == 0 || water == 0 || internet == 0)) {
+            level = 0;
+            currentOutput = 0;
+            return;
+        }
+
+        int m = 0;
+        int targetLevel = 0;
+
+        if (type == 'H') {
+            m = Math.min(electricity, Math.min(water, internet));
+            if (satisfiesH3(m)) targetLevel = 3;
+            else if (satisfiesH2(m)) targetLevel = 2;
+            else if (satisfiesH1(m)) targetLevel = 1;
+        } else if (type == 'I') {
+            m = Math.min(electricity, water);
+            if (satisfiesI3(m)) targetLevel = 3;
+            else if (satisfiesI2(m)) targetLevel = 2;
+            else if (satisfiesI1(m)) targetLevel = 1;
+        } else if (type == 'C') {
+            m = Math.min(electricity, Math.min(water, internet));
+            if (satisfiesC3(m)) targetLevel = 3;
+            else if (satisfiesC2(m)) targetLevel = 2;
+            else if (satisfiesC1(m)) targetLevel = 1;
+        }
+
+        if (targetLevel > level) level++;
+        else if (targetLevel < level) level--;
+
+        if (level == 0) {
+            currentOutput = 0;
+        } else if (level == 1) {
+            currentOutput = m;
+        } else if (level == 2) {
+            currentOutput = 2 * m;
+        } else if (level == 3) {
+            if (type == 'H') currentOutput = 2 * m + receivedLifestyle;
+            else if (type == 'I') currentOutput = 2 * m + receivedPopulation;
+            else if (type == 'C') currentOutput = 2 * m + Math.min(receivedPopulation, receivedGoods);
+        }
+    }
 }
