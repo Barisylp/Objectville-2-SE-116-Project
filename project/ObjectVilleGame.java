@@ -102,6 +102,16 @@ public class ObjectVilleGame {
         return "unknown";
     }
 
+    public void runSimulation(int ticks) {
+        for (int t = 1; t <= ticks; t++) {
+            System.out.println("Tick " + t);
+            provideServices();
+            distributeUtilities();
+            distributeResources();
+            updateAndReport();
+        }
+    }
+
     public void provideServices() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
