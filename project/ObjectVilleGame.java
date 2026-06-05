@@ -185,7 +185,16 @@ public class ObjectVilleGame {
                                                 z.internet += taken;
                                                 remaining -= taken;
                                             }
+                                        }else if (p.getType() == 'T') {
+                                        if (z.getType() != 'I') {
+                                            int needed = z.demand - z.internet;
+                                            if (needed > 0) {
+                                                taken = Math.min(needed, remaining);
+                                                z.internet += taken;
+                                                remaining -= taken;
+                                            }
                                         }
+                                    }
                                         if (taken > 0) {
                                             System.out.println(z.getTypeName() + " at (" + nx + "," + ny + ") received " + taken + " " + utilityName);
                                         }
