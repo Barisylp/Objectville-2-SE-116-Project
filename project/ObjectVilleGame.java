@@ -239,4 +239,32 @@ public class ObjectVilleGame {
             }
         }
     }
+    private void updateAndReport() {
+        pooledPopulation = 0;
+        pooledGoods = 0;
+        pooledLifestyle = 0;
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (grid[i][j] instanceof Zone) {
+                    Zone z = (Zone) grid[i][j];
+                    int oldLevel = z.level;
+                    z.computeNewState();
+
+                    System.out.println(z.getTypeName() + " at (" + i + "," + j + ") generated " + z.currentOutput + " " + z.getOutputName());
+
+                    if (z.level > oldLevel) {
+                        System.out.println(z.getTypeName() + " at (" + i + "," + j + ") levels up from " + oldLevel + " to " + z.level);
+                    }
+
+                    if (z.getType() == 'H') pooledPopulation += z.currentOutput;
+                    else if (z.getType() == 'I') pooledGoods += z.currentOutput;
+                    else if (z.getType() == 'C') pooledLifestyle += z.currentOutput;
+
+                    z.updateDemand();
+                    z.resetTickData();
+                }
+            }
+        }
+    }
 }
