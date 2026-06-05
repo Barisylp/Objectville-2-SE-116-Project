@@ -178,13 +178,7 @@ public class ObjectVilleGame {
                                                 z.water += taken;
                                                 remaining -= taken;
                                             }
-                                        } else if (p.getType() == 'T') {
-                                            int needed = z.demand - z.internet;
-                                            if (needed > 0) {
-                                                taken = Math.min(needed, remaining);
-                                                z.internet += taken;
-                                                remaining -= taken;
-                                            }
+
                                         }else if (p.getType() == 'T') {
                                         if (z.getType() != 'I') {
                                             int needed = z.demand - z.internet;
