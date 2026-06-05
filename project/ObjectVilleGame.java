@@ -277,4 +277,35 @@ public class ObjectVilleGame {
             }
         }
     }
+    public static void main(String[] args) {
+        String fileName;
+        int ticks = 10;
+        try {
+            if (args.length >= 2) {
+                fileName = args[0];
+                ticks = Integer.parseInt(args[1]);
+                if (ticks <= 0) {
+                    throw new MapException("Tick count must be greater than 0.");
+                }
+            } else if (args.length == 1) {
+                fileName = args[0];
+            } else {
+                Scanner scanner = new Scanner(System.in);
+                System.out.print("Enter your map file name: ");
+                fileName = scanner.nextLine();
+                System.out.print("Please enter the simulation tick number: ");
+                String ticksStr = scanner.nextLine();
+                ticks = Integer.parseInt(ticksStr);
+                if (ticks <= 0) {
+                    throw new MapException("Tick count must be greater than 0.");
+                }
+            }
+            ObjectVilleGame game = new ObjectVilleGame(fileName);
+            game.runSimulation(ticks);
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Invalid tick number");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
 }
